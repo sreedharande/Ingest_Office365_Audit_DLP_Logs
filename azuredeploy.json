@@ -78,7 +78,9 @@
 			"KeyVaultName": "[concat(substring(variables('FunctionName'), 0, 20), 'kv')]",
 			"AzureAADClientSecret": "AzureAADClientSecret",			
 			"StorageSuffix":"[environment().suffixes.storage]",
-			"HostingPlanName":"[concat('ASP-', variables('FunctionName'))]"
+			"HostingPlanName":"[concat('ASP-', variables('FunctionName'))]",
+            "OfficeLoginUri":"[replace(environment().portal, 'https://portal.azure', 'https://manage.office')]",
+			"AzureAADLoginUri":"[replace(environment().portal, 'https://portal.azure', 'https://login.microsoftonline')]"
     },
     "resources": [
         {
@@ -282,12 +284,12 @@
                         "tenantGuid": "[subscription().tenantId]",
                         "publisher": "[parameters('publisher')]",                        
                         "contentTypes": "[parameters('contentTypes')]",
-                        "recordTypes": "[parameters('recordTypes')]",                        
-						"AzureAADLoginUri":"[parameters('AzureAADLoginUri')]",
-						"OfficeLoginUri":"[parameters('OfficeLoginUri')]",
+                        "recordTypes": "[parameters('recordTypes')]",									
                         "DceEndPointUri": "[parameters('dataCollectionEndPoint')]",
                         "DcrImmutableId": "[parameters('dcrImmutableId]",
                         "streamName": "[parameters('streamName')]",
+                        "OfficeLoginUri": "[variables('OfficeLoginUri')]",
+                        "AzureAADLoginUri":"[variables('AzureAADLoginUri)]",
                         "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/sreedharande/Ingest_Office365_Audit_DLP_Logs/blob/main/IngestOffice365Data.zip?raw=true",
 						"Schedule":"[parameters('FunctionSchedule')]"
                     }
