@@ -1,20 +1,20 @@
-# Deploy Function App for getting Office 365 Management API data into Azure Sentinel
+# Deploy Function App for getting Office 365 Management API data into Microsoft Sentinel
 This function app will poll O365 Activity Managment API every 5 mins for logs.  It is designed to get Audit.General and DLP.All events.
 
-## How to Ingest Office 365 Audit.General and DLP.All Activity Logs into Azure Sentinel 
-The Office 365 data connector in Azure Sentinel supports ongoing user and admin activity logs for Microsoft 365 workloads, Exchange Online, SharePoint Online and Microsoft Teams. The activity logs include details of action such as file downloads, access request send, change to group event, mailbox operations. Once the activity logs are ingested into Azure Sentinel, it can be used for custom analytics rules, hunting, visualization as well as for investigation process. 
+## How to Ingest Office 365 Audit.General and DLP.All Activity Logs into Microsoft Sentinel 
+The Office 365 data connector in Microsoft Sentinel supports ongoing user and admin activity logs for Microsoft 365 workloads, Exchange Online, SharePoint Online and Microsoft Teams. The activity logs include details of action such as file downloads, access request send, change to group event, mailbox operations. Once the activity logs are ingested into Microsoft Sentinel, it can be used for custom analytics rules, hunting, visualization as well as for investigation process. 
 
- The Azure Sentinel data connector for Office 365 uses the [Office 365 Activity Management API](https://docs.microsoft.com/office/office-365-management-api/office-365-management-activity-api-reference). Below is a summary of which content types are part of the Office 365 Activity Management API and their mapping with Azure Sentinel. 
+ The Microsoft Sentinel data connector for Office 365 uses the [Office 365 Activity Management API](https://docs.microsoft.com/office/office-365-management-api/office-365-management-activity-api-reference). Below is a summary of which content types are part of the Office 365 Activity Management API and their mapping with Microsoft Sentinel. 
 
  
 
-| Content Type | Description | Azure Sentinel Mapping |
+| Content Type | Description | Microsoft Sentinel Mapping |
 | ------------ | ----------- | ---------------------- |
-| Audit.AzureActiveDirectory | Azure Active Directory logs that’s relates to Office 365 only | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Azure Sentinel |
-| Audit.Exchange | User and Admin Activities in Exchange Online | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Azure Sentinel |
-| Audit.SharePoint | User and Admin Activities in SharePoint Online | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Azure Sentinel |
-| Audit.General | Includes all other workloads not included in the previous content types | Not supported with the default connector for Office 365 in Azure Sentinel |
-| DLP.All | DLP events only for all workloads | Not supported with the default connector for Office 365 in Azure Sentinel |
+| Audit.AzureActiveDirectory | Azure Active Directory logs that’s relates to Office 365 only | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Microsoft Sentinel |
+| Audit.Exchange | User and Admin Activities in Exchange Online | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Microsoft Sentinel |
+| Audit.SharePoint | User and Admin Activities in SharePoint Online | Supported with the default connector for [Office 365](https://docs.microsoft.com/azure/sentinel/connect-office-365) in Microsoft Sentinel |
+| Audit.General | Includes all other workloads not included in the previous content types | Not supported with the default connector for Office 365 in Microsoft Sentinel |
+| DLP.All | DLP events only for all workloads | Not supported with the default connector for Office 365 in Microsoft Sentinel |
 
 Specifically, Audit.General activity logs could be of interest in SIEM if there is a need for correlation with alerts from Defender for Office 365 and alerts from Security and Compliance Center. As follow most asked use cases are: 
 - Usage of Security and Compliance Center alerts 
@@ -23,10 +23,10 @@ Specifically, Audit.General activity logs could be of interest in SIEM if there 
   - Phishing and malware alerts for files in SharePoint Online, OneDrive for Business, and Microsoft Teams  
   - Usage of Phishing and malware events 
 
-This document covers the required steps to ingest Audit.General and DLP.All activity logs from the Office 365 Management Activity API into Azure Sentinel and how to use the ingested alerts. For the ingestion of activity logs I will use an Azure Function App connector. 
+This document covers the required steps to ingest Audit.General and DLP.All activity logs from the Office 365 Management Activity API into Microsoft Sentinel and how to use the ingested alerts. For the ingestion of activity logs I will use an Azure Function App connector. 
 
 
-The Azure Function App uses a PowerShell script to collect Office 365 Audit.General and DLP.All Activity logs and ingests into a custom table in Azure Sentinel (custom tables end with _CL when created in Log Analytics). The secrets for the required connections are stored in Azure Key Vault. 
+The Azure Function App uses a PowerShell script to collect Office 365 Audit.General and DLP.All Activity logs and ingests into a custom table in Microsoft Sentinel (custom tables end with _CL when created in Log Analytics). The secrets for the required connections are stored in Azure Key Vault. 
 
 ![Function App](./images/Picture1.png)<br>
 
@@ -38,31 +38,29 @@ The following tasks describe the necessary preparation and configurations steps.
 - Create an Office 365 Management Activity API Subscription 
 - Deploy the Azure Function App 
 - Post Configuration Steps for the Function App and Key Vault 
-- How to Use the Activity Logs in Azure Sentinel 
+- How to Use the Activity Logs in Microsoft Sentinel 
 
 ### Prerequisites 
 1. Register an application in Azure AD 
-The Azure AD app is later required to use it as service principle for the [Azure Funtion App](https://github.com/Azure/Azure-Sentinel/tree/master/DataConnectors/O365%20Data) app. 
-
-  1. Go to **Azure Active Directory** / **App Registrations**
-  2. Create **New Registration**<br>
-  ![App Registration](./images/Picture2.png)<br>
-  3. Call it "O365APItoAzureSentinel".  Click **Register**.
-  4. Click **API Permissions** Blade.
-  5. Click **Add a Permission**.  
-  6. Click **Office 365 Management APIs**.
-  7. Click **Appplication Permissions**
-  8. Check **ActivityFeed.Read** and **ActivityFeed.ReadDlp**.  Click **Add permissions**.<br>
-  ![Permissions](./images/Picture5.png)<br>
-  9. Click **Grant admin consent for ...**.<br>
-  ![Admin Consent](./images/Picture6.png)<br>
-  10. Click **Certificates and Secrets** blade.
-  11. Click **New Client Secret**.
-  12. Enter a description, select **never**.  Click **Add**.<br>
-  ![Secret](./images/Picture3.png)<br>
-  13. **IMPORTANT**.  Click **copy** next to the new secret and paste it somewhere temporaily.  You can not come back to get the secret once you leave the blade.
-  14. Copy the **client Id** from the application properties and paste it somewhere.
-  15. Also copy the **tenant Id** from the AAD directory properties blade.
+- Go to **Azure Active Directory** / **App Registrations**  
+- Create **New Registration**  
+  ![App Registration](./images/Picture2.png)  
+- Call it "O365APItoAzureSentinel".  Click **Register**  
+- Click **API Permissions** Blade  
+- Click **Add a Permission**  
+- Click **Office 365 Management APIs**  
+- Click **Appplication Permissions**  
+- Check **ActivityFeed.Read** and **ActivityFeed.ReadDlp**.  Click **Add permissions**  
+  ![Permissions](./images/Picture5.png>  
+- Click **Grant admin consent for ...**  
+  ![Admin Consent](./images/Picture6.png)  
+- Click **Certificates and Secrets** blade  
+- Click **New Client Secret**  
+- Enter a description, select **never**.  Click **Add**  
+  ![Secret](./images/Picture3.png)<br>  
+- **IMPORTANT**.  Click **copy** next to the new secret and paste it somewhere temporaily.  You can not come back to get the secret once you leave the blade.  
+-  Copy the **client Id** from the application properties and paste it somewhere.  
+-  Also copy the **tenant Id** from the AAD directory properties blade  
 
 2. Create Data Collection Endpoint (DCE) on Azure Monitor  
 	https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs#create-data-collection-endpoint  
@@ -117,14 +115,14 @@ Thanks to the published ARM template the deployment of the [Azure Funtion App](h
 2. Now it is time to use the noted details from previous steps.  
 - Select the right **Subscription**, **Resource Group** and **Region** where you what to deploy the Azure Funtion App.  
 - Fill the Instance Details **Client ID**, **Client Secret**, **Tenant Domain**, **Publisher Guid**.  
-- There is also a need of **Workspace ID** and **Workspace Key** from where Azure Sentinel is deployed. 
+- There is also a need of **Workspace ID** and **Workspace Key** from where Microsoft Sentinel is deployed. 
 - The Content Types you can leave as default with **Audit.General**, or you can also add **DLP.All** as well. Or use only **DLP.All**. 
 ![Deployment](./images/Picture9.png)
 3. Click to **Review + create**, review the configuration and click **Create**. 
 4. Now the deployment of ARM template is completed. 
 ![Complete](./images/Picture10.png)
 
-## How to use the Activity Logs in Azure Sentinel 
+## How to use the Activity Logs in Microsoft Sentinel 
 Once the Azure Function App is functional you can query the General.Audit and DLP.All activity logs. The activity will reside in a Custom Table as configured in the Azure Function App above. The following table includes sample Kusto Language Queries (KQL).  You can see these are using the Custom Logs (Custom log tables always end in “_CL”) and the values we mentioned earlier.<br>
 ![Review](./images/Picture19.png)<br>
 
