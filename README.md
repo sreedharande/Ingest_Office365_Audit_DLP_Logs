@@ -40,34 +40,44 @@ The following tasks describe the necessary preparation and configurations steps.
 - Post Configuration Steps for the Function App and Key Vault 
 - How to Use the Activity Logs in Azure Sentinel 
 
-### Register an application in Azure AD 
+### Prerequisites 
+1. Register an application in Azure AD 
 The Azure AD app is later required to use it as service principle for the [Azure Funtion App](https://github.com/Azure/Azure-Sentinel/tree/master/DataConnectors/O365%20Data) app. 
 
-1. Go to **Azure Active Directory** / **App Registrations**
-2. Create **New Registration**<br>
-![App Registration](./images/Picture2.png)<br>
-3. Call it "O365APItoAzureSentinel".  Click **Register**.
-4. Click **API Permissions** Blade.
-5. Click **Add a Permission**.  
-6. Click **Office 365 Management APIs**.
-7. Click **Appplication Permissions**
-8. Check **ActivityFeed.Read** and **ActivityFeed.ReadDlp**.  Click **Add permissions**.<br>
-![Permissions](./images/Picture5.png)<br>
-9. Click **Grant admin consent for ...**.<br>
-![Admin Consent](./images/Picture6.png)<br>
-10. Click **Certificates and Secrets** blade.
-11. Click **New Client Secret**.
-12. Enter a description, select **never**.  Click **Add**.<br>
-![Secret](./images/Picture3.png)<br>
-13. **IMPORTANT**.  Click **copy** next to the new secret and paste it somewhere temporaily.  You can not come back to get the secret once you leave the blade.
-14. Copy the **client Id** from the application properties and paste it somewhere.
-15. Also copy the **tenant Id** from the AAD directory properties blade.
+  1. Go to **Azure Active Directory** / **App Registrations**
+  2. Create **New Registration**<br>
+  ![App Registration](./images/Picture2.png)<br>
+  3. Call it "O365APItoAzureSentinel".  Click **Register**.
+  4. Click **API Permissions** Blade.
+  5. Click **Add a Permission**.  
+  6. Click **Office 365 Management APIs**.
+  7. Click **Appplication Permissions**
+  8. Check **ActivityFeed.Read** and **ActivityFeed.ReadDlp**.  Click **Add permissions**.<br>
+  ![Permissions](./images/Picture5.png)<br>
+  9. Click **Grant admin consent for ...**.<br>
+  ![Admin Consent](./images/Picture6.png)<br>
+  10. Click **Certificates and Secrets** blade.
+  11. Click **New Client Secret**.
+  12. Enter a description, select **never**.  Click **Add**.<br>
+  ![Secret](./images/Picture3.png)<br>
+  13. **IMPORTANT**.  Click **copy** next to the new secret and paste it somewhere temporaily.  You can not come back to get the secret once you leave the blade.
+  14. Copy the **client Id** from the application properties and paste it somewhere.
+  15. Also copy the **tenant Id** from the AAD directory properties blade.
 
-For the deployment of [Azure Funtion App](https://github.com/sreedharande/IngestOffice365AuditLogs), make a note of following settings: 
-- The Azure AD Application ID 
-- The Azure AD Application Secret 
-- The Tenant ID 
-- The Tenant Domain 
+2. Create Data Collection Endpoint (DCE) on Azure Monitor  
+	https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs#create-data-collection-endpoint  
+	
+3. Create Customlog Table
+	https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs#add-custom-log-table  
+	
+4. Create Data Collection Rule (DCR)  
+   https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs-api#create-data-collection-rule
+
+5. Collect DCR-ImmutableId  
+	https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs#collect-information-from-dcr  
+	
+6. Assign Permissions to Data Collection Rule(DCR)  
+	https://docs.microsoft.com/azure/azure-monitor/logs/tutorial-custom-logs-api#assign-permissions-to-dcr  
 
 ### Create an Office 365 Management Activity API Subscription 
 After successfully creating the service principles, run the following PowerShell script to register the API subscription.
