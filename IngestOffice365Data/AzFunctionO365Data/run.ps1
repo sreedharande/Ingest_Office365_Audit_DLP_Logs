@@ -226,7 +226,7 @@ $storageAccountContext = New-AzStorageContext -ConnectionString $AzureWebJobsSto
 $storageAccountTableName = "O365ApiExecutions"
 $StorageTable = Get-AzStorageTable -Name $storageAccountTableName -Context $storageAccountContext -ErrorAction Ignore
 if($null -eq $StorageTable.Name){  
-    $startTime = $currentUTCtime.AddSeconds(-300) | Get-Date -Format yyyy-MM-ddThh:mm:ss
+    $startTime = $currentUTCtime.AddHours(-24) | Get-Date -Format yyyy-MM-ddThh:mm:ss
 	New-AzStorageTable -Name $storageAccountTableName -Context $storageAccountContext
     $o365TimeStampTbl = (Get-AzStorageTable -Name $storageAccountTableName -Context $storageAccountContext.Context).cloudTable    
     Add-AzTableRow -table $o365TimeStampTbl -PartitionKey "Office365" -RowKey "lastExecutionEndTime" -property @{"lastExecutionEndTimeValue"=$startTime} -UpdateExisting
@@ -237,7 +237,7 @@ Else {
 # retrieve the last execution values
 $lastExecutionEndTime = Get-azTableRow -table $o365TimeStampTbl -partitionKey "Office365" -RowKey "lastExecutionEndTime" -ErrorAction Ignore
 
-$startTime = $($lastExecutionEndTime.lastExecutionEndTimeValue) | Get-Date -Format yyyy-MM-ddThh:mm:ss
+$startTime = $($lastExecutionEndTime.lastExecutionEndTimeValue)
 $endTime = $currentUTCtime | Get-Date -Format yyyy-MM-ddThh:mm:ss
 
 $O365Params = Get-Office365AuthToken $AADAppClientId $AADAppClientSecret $AADAppClientDomain $AzureTenantId
