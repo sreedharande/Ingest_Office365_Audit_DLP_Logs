@@ -288,7 +288,7 @@
                         "DceEndPointUri": "[parameters('dataCollectionEndPoint')]",
                         "DcrImmutableId": "[parameters('dcrImmutableId]",
                         "streamName": "[parameters('streamName')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/sreedharande/IngestOffice365AuditLogs/blob/main/IngestOffice365Data.zip?raw=true",
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/sreedharande/Ingest_Office365_Audit_DLP_Logs/blob/main/IngestOffice365Data.zip?raw=true",
 						"Schedule":"[parameters('FunctionSchedule')]"
                     }
                 }

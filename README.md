@@ -100,9 +100,9 @@ Invoke-WebRequest -Method Post -Headers $headerParams -Uri "https://manage.offic
 Thanks to the published ARM template the deployment of the [Azure Funtion App](https://github.com/sreedharande/IngestOffice365AuditLogs) is done with just a few clicks. 
 1. Click to **Deploy the template / Deploy to Azure** below.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsreedharande%2FIngestOffice365AuditLogs%2Fmain%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsreedharande%2FIngest_Office365_Audit_DLP_Logs%2Fmain%2Fazuredeploy.json)
 
-[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsreedharande%2FIngestOffice365AuditLogs%2Fmain%2Fazuredeploy.json)
+[![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsreedharande%2FIngest_Office365_Audit_DLP_Logs%2Fmain%2Fazuredeploy.json)
 
 2. Now it is time to use the noted details from previous steps.  
 - Select the right **Subscription**, **Resource Group** and **Region** where you what to deploy the Azure Funtion App.  
