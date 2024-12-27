@@ -242,6 +242,10 @@ $endTime = $currentUTCtime | Get-Date -Format yyyy-MM-ddThh:mm:ss
 
 $O365Params = Get-Office365AuthToken $AADAppClientId $AADAppClientSecret $AADAppClientDomain $AzureTenantId
 Get-O365Data $startTime $endTime $O365Params $AzureTenantId
+
+#Updating
+$endTime = $currentUTCtime | Get-Date -Format yyyy-MM-ddThh:mm:ss
+Add-AzTableRow -table $o365TimeStampTbl -PartitionKey "Office365" -RowKey "lastExecutionEndTime" -property @{"lastExecutionEndTimeValue"=$endTime} -UpdateExisting
 #endregion
 
 # Write an information log with the current time.
